@@ -1,6 +1,7 @@
-import * as service from '../services/post.js';
+import type { Request, Response } from 'express';
+import * as service from '../../services/post.js';
 
-function isPositiveInteger(value) {
+function isPositiveInteger(value: unknown): value is string {
   if (typeof value !== 'string') {
     return false;
   }
@@ -18,7 +19,7 @@ function isPositiveInteger(value) {
   return String(number) === value;
 }
 
-export function getAll(req, res) {
+export function getAll(req: Request, res: Response) {
   try {
     const { category, take } = req.query;
 
@@ -37,7 +38,7 @@ export function getAll(req, res) {
   }
 }
 
-export function getById(req, res) {
+export function getById(req: Request, res: Response) {
   try {
     if (!isPositiveInteger(req.params.id)) {
       return res.status(400).json({ error: 'id must be a positive integer' });
@@ -55,9 +56,9 @@ export function getById(req, res) {
   }
 }
 
-export async function addPost(req, res) {
+export async function addPost(req: Request, res: Response) {
   try {
-    const fields = ['title', 'content', 'author', 'category'];
+    const fields = ['title', 'content', 'author', 'category'] as const;
 
     if (!req.body || fields.some((field) => (
       typeof req.body[field] !== 'string' || !req.body[field].trim()
