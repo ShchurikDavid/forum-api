@@ -1,10 +1,3 @@
-export interface CreatePost {
-  title: string;
-  content: string;
-  author: string;
-  category: string;
-}
-
 export interface PostResponse {
   id: number;
   title: string;
@@ -12,3 +5,4 @@ export interface PostResponse {
   author: string;
   category: string;
 }
+
