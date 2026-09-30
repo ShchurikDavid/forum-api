@@ -1,14 +1,17 @@
-import * as repository from '../repositories/post.js';
-import type { CreatePost } from '../transport/dto/post.js';
+import type { Repository } from '../domain/post/repository.js';
+import type { Service } from './post.types.js';
 
-export function getAll(category?: string, take?: number) {
-  return repository.getAll(category, take);
+export function createPostService(repository: Repository): Service {
+  return {
+    getAll(category, take) {
+      return repository.getAll(category, take);
+    },
+    getById(id) {
+      return repository.getById(id);
+    },
+    addPost(post) {
+      return repository.addPost(post);
+    },
+  };
 }
 
-export function getById(id: number) {
-  return repository.getById(id);
-}
-
-export function addPost(post: CreatePost) {
-  return repository.addPost(post);
-}
