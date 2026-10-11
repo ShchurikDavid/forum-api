@@ -1,25 +1,26 @@
-import type { Post } from '../domain/post/entity.js';
 import type { Repository } from '../domain/post/repository.js';
+import type { db as database } from '../prisma/db.js';
 
-export function createPostRepository(): Repository {
-  const posts: Post[] = [];
+export function createPostRepository(db: typeof database): Repository {
+  const posts = db.orm.public.Post;
 
   return {
-    getAll(category, take) {
-      let result = posts;
+    async getAll(category, take) {
+      let query = posts.orderBy((post) => post.id.asc());
 
       if (category) {
-        result = posts.filter((post) => post.category === category);
+        query = query.where({ category });
       }
-      return take === undefined ? result : result.slice(0, take);
+      if (take !== undefined) {
+        query = query.limit(take);
+      }
+      return await query.all();
     },
-    getById(id) {
-      return posts.find((post) => post.id === id);
+    async getById(id) {
+      return (await posts.where({ id }).first()) ?? undefined;
     },
     async addPost({ title, content, author, category }) {
-      const post = { id: posts.length + 1, title, content, author, category };
-      posts.push(post);
-      return post;
+      return posts.create({ title, content, author, category });
     },
   };
 }
