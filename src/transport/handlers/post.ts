@@ -5,7 +5,7 @@ import type { PostResponse } from '../dto/post/responses.js';
 import type { ErrorResponse } from '../dto/post/errors.js';
 
 export function createPostHandlers(service: Service) {
-  function getAll(req: Request, res: Response<PostResponse[] | ErrorResponse>) {
+  async function getAll(req: Request, res: Response<PostResponse[] | ErrorResponse>) {
     try {
       const { category, take } = req.query;
   
@@ -25,13 +25,13 @@ export function createPostHandlers(service: Service) {
         }
       }
   
-      return res.json(service.getAll(category, limit));
+      return res.json(await service.getAll(category, limit));
     } catch (error) {
       return res.status(500).json({ error: 'Internal server error' });
     }
   }
   
-  function getById(req: Request, res: Response<PostResponse | ErrorResponse>) {
+  async function getById(req: Request, res: Response<PostResponse | ErrorResponse>) {
     try {
       const id = Number(req.params.id);
 
@@ -40,7 +40,7 @@ export function createPostHandlers(service: Service) {
         return res.status(400).json({ error: 'id must be a positive integer' });
       }
   
-      const post = service.getById(id);
+      const post = await service.getById(id);
   
       if (!post) {
         return res.status(404).json({ error: 'Post not found' });
