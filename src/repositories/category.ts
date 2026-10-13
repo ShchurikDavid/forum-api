@@ -18,9 +18,7 @@ export function createCategoryRepository(db: typeof database): CategoryRepositor
 }
 
 function hasDatabaseCode(error: unknown, code: string): boolean {
-  const seen = new Set<unknown>();
-  while (error && typeof error === 'object' && !seen.has(error)) {
-    seen.add(error);
+  while (error && typeof error === 'object') {
     const value = error as { code?: string; sqlState?: string; cause?: unknown };
     if (value.code === code || value.sqlState === code) return true;
     error = value.cause;
