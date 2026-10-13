@@ -1,6 +1,5 @@
 export interface GetPostsQuery {
   category?: string;
-  categoryId?: string;
   take?: string;
 }
 
@@ -8,7 +7,7 @@ export interface CreatePost {
   title: string;
   content: string;
   author: string;
-  categoryId: number;
+  category: string;
 }
 import type { Request } from 'express';
 
