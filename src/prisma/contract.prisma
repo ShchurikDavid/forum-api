@@ -5,5 +5,13 @@ model Post {
   title     String
   content   String
   author    String
-  category  String
+  categoryId Int
+  category Category @relation(fields: [categoryId], references: [id])
+  @@index([categoryId])
+}
+
+model Category {
+  id Int @id @default(autoincrement())
+  name String @unique
+  posts Post[]
 }
