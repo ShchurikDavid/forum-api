@@ -64,11 +64,14 @@ export function createPostHandlers(service: Service) {
   
   async function addPost(req: CreatePostRequest, res: Response<PostResponse | ErrorResponse>) {
     try {
-      const fields = ['title', 'content', 'author'] as const;
+      const fields = ['title', 'content'] as const;
   
       if (!req.body || typeof req.body !== 'object' || Array.isArray(req.body)
-        || Object.keys(req.body).some(field => !['title', 'content', 'author', 'categoryId'].includes(field))) {
-        return res.status(422).json({ error: 'Only title, content, author and categoryId are allowed' });
+        || Object.keys(req.body).some(field => !['title', 'content', 'authorId', 'categoryId'].includes(field))) {
+        return res.status(422).json({ error: 'Only title, content, authorId and categoryId are allowed' });
+      }
+      if (!Number.isSafeInteger(req.body.authorId) || req.body.authorId <= 0) {
+        return res.status(400).json({ error: 'authorId must be a positive integer' });
       }
       if (typeof req.body.categoryId !== 'number' || !Number.isInteger(req.body.categoryId)
         || req.body.categoryId <= 0) {
@@ -79,7 +82,7 @@ export function createPostHandlers(service: Service) {
         typeof req.body[field] !== 'string' || !req.body[field].trim()
       ))) {
         return res.status(422).json({
-          error: 'title, content and author must be non-empty strings',
+          error: 'title and content must be non-empty strings',
         });
       }
   
