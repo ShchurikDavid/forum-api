@@ -14,9 +14,13 @@
   "type": "module",
   "dependencies": {
     "@prisma/orm-postgres": "^8.0.0-rc.17",
+    "@reduxjs/toolkit": "^2.13.0",
     "@types/express": "^5.0.6",
+    "bcryptjs": "^3.0.3",
     "dotenv": "^18.0.7",
     "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "react-redux": "^9.3.0",
     "tsx": "^4.23.15"
   },
   "allowScripts": {
@@ -24,8 +28,9 @@
   },
   "devDependencies": {
     "@prisma/cli-engine": "^0.7.0",
-    "@types/node": "^26.6.5",
-    "prisma": "^8.0.0-rc.22",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^26.6.6",
+    "prisma": "8.0.0-rc.22",
     "typescript": "^7.0.2"
   }
 }
