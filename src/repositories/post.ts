@@ -23,6 +23,10 @@ export function createPostRepository(db: typeof database): Repository {
       }
       return (await query.include('category').include('author').all()).map(publicPost);
     },
+    async getByAuthorId(authorId) {
+      return (await posts.where({ authorId }).orderBy(post => post.id.asc())
+        .include('category').include('author').all()).map(publicPost);
+    },
     async getById(id) {
       const post = await posts.where({ id }).include('category').include('author').first();
       return post ? publicPost(post) : undefined;

@@ -1,3 +1,6 @@
+import { hashPassword, comparePassword } from './src/lib/password.js';
+import { signAccessToken, signRefreshToken, verifyAccessToken, verifyRefreshToken } from './src/lib/jwt.js';
+import { createRequireAuth } from './src/middlewares/requireAuth.js';
 import { createUserRepository } from './src/repositories/user.js';
 import { createUserService } from './src/services/user.js';
 import { createUserHandlers } from './src/transport/handlers/user.js';
@@ -14,11 +17,13 @@ import { createCategoryService } from './src/services/category.js';
 import { createCategoryHandlers } from './src/transport/handlers/category.js';
 import { createCategoryRouter } from './src/transport/routers/category.js';
 
-const jwtSecret = process.env.JWT_SECRET;
-if (!jwtSecret) throw new Error('JWT_SECRET is required');
-const refreshSecret = process.env.JWT_REFRESH_SECRET;
-if (!refreshSecret) throw new Error('JWT_REFRESH_SECRET is required');
-const userHandlers = createUserHandlers(createUserService(createUserRepository(db), jwtSecret, refreshSecret));
+const requireAuth = createRequireAuth(verifyAccessToken);
+const userService = createUserService(
+  createUserRepository(db),
+  { hash: hashPassword, verify: (hash, password) => comparePassword(password, hash) },
+  { signAccessToken, signRefreshToken, verifyRefreshToken },
+);
+const userHandlers = createUserHandlers(userService);
 const userRouter = createUserRouter(userHandlers);
 const app = express();
 const categoryRepository = createCategoryRepository(db);
@@ -28,9 +33,10 @@ const categoryRouter = createCategoryRouter(categoryHandlers);
 const postRepository = createPostRepository(db);
 const postService = createPostService(postRepository, categoryRepository);
 const postHandlers = createPostHandlers(postService);
-const postRouter = createPostRouter(postHandlers);
+const postRouter = createPostRouter(postHandlers, requireAuth);
 
 app.use(express.json());
+app.get('/me', requireAuth, userHandlers.me);
 app.post('/refresh', userHandlers.refresh);
 app.use('/users', userRouter);
 app.use('/posts', postRouter);

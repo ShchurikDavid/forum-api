@@ -96,7 +96,16 @@ export function createPostHandlers(service: Service) {
     }
   }
 
-  return { getAll, getById, addPost };
+  async function getMyPosts(req: Request, res: Response<PostResponse[] | ErrorResponse>) {
+    if (res.locals.userId === undefined) return res.status(401).json({ error: 'Unauthorized' });
+    try {
+      return res.json(await service.getByAuthorId(res.locals.userId));
+    } catch {
+      return res.status(500).json({ error: 'Internal server error' });
+    }
+  }
+
+  return { getAll, getById, addPost, getMyPosts };
 }
 
 export type PostHandlers = ReturnType<typeof createPostHandlers>;
