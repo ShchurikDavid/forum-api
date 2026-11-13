@@ -8,6 +8,9 @@ export function createPostService(repository: Repository, categories: CategoryRe
     getAll(category, take, categoryId) {
       return repository.getAll(category, take, categoryId);
     },
+    getByAuthorId(authorId) {
+      return repository.getByAuthorId(authorId);
+    },
     getById(id) {
       return repository.getById(id);
     },
