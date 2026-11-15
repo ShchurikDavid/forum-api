@@ -17,7 +17,10 @@ export function createUserService(repository: UserRepository, passwordHasher: Pa
       }
       const user = await repository.getById(userId);
       if (!user) throw new InvalidCredentialsError();
-      return { accessToken: tokenSigner.signAccessToken(user.id) };
+      return {
+        accessToken: tokenSigner.signAccessToken(user.id),
+        refreshToken: tokenSigner.signRefreshToken(user.id),
+      };
     },
     async register({ email, password }) {
       if (await repository.getByEmail(email)) throw new EmailConflictError();
