@@ -30,11 +30,15 @@ export function createUserHandlers(service: UserService) {
         return res.status(401).json({ error: 'Invalid refresh token' });
       }
       try {
-        const { accessToken } = await service.refresh(refreshToken);
+        const { accessToken, refreshToken: newRefreshToken } = await service.refresh(refreshToken);
         res.cookie('accessToken', accessToken, {
           httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'lax', maxAge: Number(process.env.TOKEN_ACCESS_TIME) * 1000,
         });
-        return res.json({ message: 'Access token refreshed' });
+        res.cookie('refreshToken', newRefreshToken, {
+          httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'lax',
+          path: '/refresh', maxAge: Number(process.env.REFRESH_TOKEN_TIME) * 1000,
+        });
+        return res.json({ message: 'Tokens refreshed' });
       } catch (error) {
         if (error instanceof InvalidCredentialsError) return res.status(401).json({ error: 'Invalid refresh token' });
         return res.status(500).json({ error: 'Internal server error' });

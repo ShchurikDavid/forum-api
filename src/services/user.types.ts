@@ -4,7 +4,7 @@ export interface UserService {
   getById(id: number): Promise<PublicUser | undefined>;
   register(credentials: Credentials): Promise<PublicUser>;
   login(credentials: Credentials): Promise<{ user: PublicUser; accessToken: string; refreshToken: string }>;
-  refresh(refreshToken: string): Promise<{ accessToken: string }>;
+  refresh(refreshToken: string): Promise<{ accessToken: string; refreshToken: string }>;
 }
 
 export interface PasswordHasher {

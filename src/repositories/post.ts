@@ -1,12 +1,13 @@
 import type { Repository } from '../domain/post/repository.js';
+import type { Post } from '../domain/post/entity.js';
 import type { db as database } from '../prisma/db.js';
 
 export function createPostRepository(db: typeof database): Repository {
   const posts = db.orm.public.Post;
 
-  const publicPost = <T extends { author: { id: number; email: string } }>(post: T) => ({
-    ...post, author: { id: post.author.id, email: post.author.email },
-  });
+  function publicPost(post: Post): Post {
+    return { ...post, author: { id: post.author.id, email: post.author.email } };
+  }
 
   return {
     async getAll(category, take, categoryId) {

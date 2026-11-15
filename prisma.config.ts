@@ -11,8 +11,6 @@ const orm = ormConfig({
   },
 });
 
-// Prisma's glob resolver mishandles parentheses in the project directory.
-// This contract is a single file, so pass its literal path to the PSL loader.
 const source = orm.contract!.source;
 
 export default definePrismaConfig({
