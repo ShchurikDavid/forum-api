@@ -32,10 +32,10 @@ export function createUserHandlers(service: UserService) {
       try {
         const { accessToken, refreshToken: newRefreshToken } = await service.refresh(refreshToken);
         res.cookie('accessToken', accessToken, {
-          httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'lax', maxAge: Number(process.env.TOKEN_ACCESS_TIME) * 1000,
+          httpOnly: true, secure: false, sameSite: 'lax', maxAge: Number(process.env.TOKEN_ACCESS_TIME) * 1000,
         });
         res.cookie('refreshToken', newRefreshToken, {
-          httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'lax',
+          httpOnly: true, secure: false, sameSite: 'lax',
           path: '/refresh', maxAge: Number(process.env.REFRESH_TOKEN_TIME) * 1000,
         });
         return res.json({ message: 'Tokens refreshed' });
@@ -58,10 +58,10 @@ export function createUserHandlers(service: UserService) {
       try {
         const { user, accessToken, refreshToken } = await service.login(req.body);
         res.cookie('accessToken', accessToken, {
-          httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'lax', maxAge: Number(process.env.TOKEN_ACCESS_TIME) * 1000,
+          httpOnly: true, secure: false, sameSite: 'lax', maxAge: Number(process.env.TOKEN_ACCESS_TIME) * 1000,
         });
         res.cookie('refreshToken', refreshToken, {
-          httpOnly: true, secure: process.env.NODE_ENV === 'production', sameSite: 'lax',
+          httpOnly: true, secure: false, sameSite: 'lax',
           path: '/refresh', maxAge: Number(process.env.REFRESH_TOKEN_TIME) * 1000,
         });
         return res.json(user);
