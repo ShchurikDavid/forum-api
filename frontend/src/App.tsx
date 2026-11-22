@@ -1,4 +1,5 @@
 import { PageHeader } from './components/PageHeader'
+import { LoginForm, RegisterForm } from './components/AuthForm'
 import { PostList } from './components/PostList'
 import { useGetPostsQuery } from './api/baseApi'
 import './App.css'
@@ -9,6 +10,10 @@ function App() {
   return (
     <main className="posts-page">
       <PageHeader title="Блог про розробку" />
+      <div className="auth-forms">
+        <RegisterForm />
+        <LoginForm />
+      </div>
       {isLoading ? (
         <p role="status">Завантаження постів...</p>
       ) : isError ? (
