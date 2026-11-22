@@ -31,7 +31,6 @@ export default class M extends Migration<Start, End> {
         table: 'Post',
         column: col('categoryId', 'int4', { codecRef: { codecId: 'pg/int4@1' } }),
       }),
-      // Preserve every existing category name and post before dropping the text column.
       rawSql({
         id: 'backfill.Post.categoryId', label: 'Preserve existing post categories',
         operationClass: 'data', target: { id: 'postgres' }, precheck: [],

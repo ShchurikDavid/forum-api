@@ -20,7 +20,7 @@ import { createCategoryRouter } from './src/transport/routers/category.js';
 const requireAuth = createRequireAuth(verifyAccessToken);
 const userService = createUserService(
   createUserRepository(db),
-  { hash: hashPassword, verify: (hash, password) => comparePassword(password, hash) },
+  { hash: hashPassword, verify: comparePassword },
   { signAccessToken, signRefreshToken, verifyRefreshToken },
 );
 const userHandlers = createUserHandlers(userService);
